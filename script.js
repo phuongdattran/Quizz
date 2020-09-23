@@ -1,5 +1,7 @@
 content = document.getElementById("questionContent");
+nextButton = document.getElementById("next");
 let score = 0;
+let questionList = [];
 
 class Question {
     constructor(statement, answers, rightAnswer) {
@@ -9,20 +11,25 @@ class Question {
     }
 
     displayStatement() {
-        content.innerHTML = `<p> ${this.statement} <p>`;
+        content.innerHTML += `<p> ${this.statement} <p>`;
     }
 
     displayAnswers() {
+        this.firstRightTry = true;
         for (let i=0; i<this.answers.length; i++) {
             content.innerHTML += `<p>${i+1}. <button id="answer-${i}" class="answer">${this.answers[i]}</button></p>`;
             document.querySelectorAll('.answer').forEach(item => {
                 item.addEventListener('click', () => {
                     if (item.innerHTML==this.rightAnswer) {
                         console.log("Bravo! c'est juste!");
-                        score++;
                         item.style.backgroundColor = "#2CAE66";
+                        if (this.firstRightTry == true) {
+                        score++;
+                        this.firstRightTry = false;
+                        }
                     } else {
                         console.log("Bouh! Essaye à nouveau :)");
+                        this.firstRightTry = false;
                         item.style.backgroundColor = "#F93822";
                     }
                 })
@@ -42,12 +49,42 @@ class QuestionWithImg extends Question {
     }
 }
 
-function makeQuizz() {
-    let question1 = new QuestionWithImg ("Tu es?", ["Une banane", "Une pomme", "Une cerise"], "Une banane", "1");
-    question1.displayStatement();
-    question1.displayImg();
-    question1.displayAnswers();
+function makeQuestion(statement, answers, rightAnswer, image="none") {
+    let question;
+    if (image != "none"){
+        question = new QuestionWithImg (statement, answers, rightAnswer, image);
+        questionList.push(question);
+    } else {
+        question = new Question (statement, answers, rightAnswer);
+        questionList.push(question);
+    }
 }
 
-makeQuizz();
+function displayQuizz(questionList) {
+    let index = 0;
+    content.innerHTML ="";
+    if (questionList[index].hasOwnProperty('image')){
+        questionList[index].displayStatement();
+        questionList[index].displayImg();
+        console.log("question avec img");
+    } else {
+        questionList[index].displayStatement();
+    }
+
+    questionList[index].displayAnswers();
+    
+    nextButton.addEventListener("click", ()=>{
+        if (index < questionList.length-1) {
+        displayQuestion(questionList, index+1);
+        } else {
+            content.innerHTML = "Score: "+ + score;
+        }
+    });
+}
+
+makeQuestion("Tu es?1", ["Une banane", "Une pomme", "Une cerise"], "Une banane", "1");
+makeQuestion("Tu es?2", ["Une banane", "Une pomme", "Une cerise"], "Une banane");
+makeQuestion("Tu es?3", ["Une banane", "Une pomme", "Une cerise"], "Une banane", "1");
+displayQuizz(questionList);
+
 
