@@ -1,10 +1,13 @@
 body {
     background-color: #0F4C81;
     font-family: Arial, Helvetica, sans-serif;
-    color: white;
+    color: #414141;
     text-align: center;
 }
-
+#currentQuestion {
+    font-size : 17px;
+    color: #6e6e6e;
+}
 #questionContent {
     width: 80%;
     font-size: 20px;
@@ -12,15 +15,20 @@ body {
     text-align: center;
     padding: 15px;
     margin : 20px auto;
-    background-color: coral;
+    background-color: #ebebeb;
     border-radius : 5px;
 }
 
 button {
     background-color: rgb(247, 247, 247);
-    border : 1px solid grey;
+    border : 1px solid rgb(194, 194, 194);
     border-radius: 5px;
     font-weight: 700;
     margin : 5px;
     padding : 10px;
+}
+
+button:hover {
+    background-color: #0F4C81;
+    color : white;
 }
