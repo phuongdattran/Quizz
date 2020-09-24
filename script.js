@@ -120,7 +120,7 @@ function displayQuizz(questionList, index) {
         allCorrect = false;
       }
     } else {
-      content.innerHTML = "Score: " + +score + "/" + questionList.length;
+      content.innerHTML = "<p id='score'>Score: " + +score + "/" + questionList.length + "</p>";
       nextButton.innerHTML = "Try Again!";
       nextButton.setAttribute("onClick", "window.location.reload();");
     }

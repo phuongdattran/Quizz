@@ -56,3 +56,8 @@ button:hover {
 #next:hover {
   background-color: #696969;
 }
+
+#score {
+  font-size : 30px;
+  margin : 30px;
+}
