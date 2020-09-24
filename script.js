@@ -16,6 +16,7 @@ class Question {
 
   displayAnswers() {
     this.firstRightTry = true;
+    this.nbrRightAnswers = 0;
     for (let i = 0; i < this.answers.length; i++) {
       content.innerHTML += `<p>${
         i + 1
@@ -24,22 +25,42 @@ class Question {
       }</button></p>`;
       document.querySelectorAll(".answer").forEach((item) => {
         item.addEventListener("click", () => {
-          if (item.innerHTML == this.rightAnswer) {
+          if (
+            item.innerHTML == this.rightAnswer[0] ||
+            item.innerHTML == this.rightAnswer[1]
+          ) {
             console.log("Bravo! c'est juste!");
             item.style.backgroundColor = "#2CAE66";
-            if (this.firstRightTry == true) {
-              score++;
-              this.firstRightTry = false;
-            }
+            this.nbrRightAnswers++;
+            this.firstRightTry = false;
           } else {
             console.log("Bouh! Essaye à nouveau :)");
             this.firstRightTry = false;
             item.style.backgroundColor = "#F93822";
+            this.nbrRightAnswers--;
+          }
+          if (score + this.nbrRightAnswers == score + this.rightAnswer.length) {
+            score++;
+            console.log(score);
           }
         });
       });
     }
   }
+}
+
+function allAnswersRight(userAnswer, answers) {
+  let nbrRightAnswers = 0;
+  let allRight = false;
+  for (let i = 0; i < answers.length; i++) {
+    if (userAnswer == answers[i]) {
+      nbrRightAnswers++;
+    }
+  }
+  if (nbrRightAnswers == answers.length) {
+    allRight = true;
+  }
+  return allRight;
 }
 
 class QuestionWithImg extends Question {
@@ -82,7 +103,7 @@ function displayQuizz(questionList, index) {
     if (index < questionList.length - 1) {
       displayQuizz(questionList, index + 1);
     } else {
-      content.innerHTML = "Score: " + +score;
+      content.innerHTML = "Score: " + +score + "/" + questionList.length;
       nextButton.innerHTML = "Try Again!";
       nextButton.setAttribute("onClick", "window.location.reload();");
     }
@@ -91,20 +112,28 @@ function displayQuizz(questionList, index) {
 
 console.log("Je t'es vu, ferme l'outil dev!");
 makeQuestion(
-  "Tu es?1",
-  ["Une banane", "Une pomme", "Une cerise"],
-  "Une banane",
-  "1"
+  "What are 2 native functions to run code asynchronously in JavaScript ?",
+  [
+    "timeout",
+    "setTimeout",
+    "startInterval",
+    "delay",
+    "setInterval",
+    "repeat",
+    "interval",
+  ],
+  ["setTimeout", "setInterval"]
 );
+
 makeQuestion(
-  "Tu es?2",
-  ["Une banane", "Une pomme", "Une cerise"],
-  "Une banane"
+  "What's the output of this code : ",
+  ["2", "undefined", "x", "8"],
+  ["2"]
 );
+
 makeQuestion(
-  "Tu es?3",
-  ["Une banane", "Une pomme", "Une cerise"],
-  "Une banane",
-  "1"
+  "Question 3 : What's the output of this code : ",
+  ["2", "callback", "undefined", "nothing", "x", "4"],
+  ["2"]
 );
 displayQuizz(questionList, 0);
