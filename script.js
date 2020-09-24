@@ -89,6 +89,7 @@ function displayQuizz(questionList, index) {
   });
 }
 
+console.log("Je t'es vu, ferme l'outil dev!");
 makeQuestion(
   "Tu es?1",
   ["Une banane", "Une pomme", "Une cerise"],
