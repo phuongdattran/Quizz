@@ -2,6 +2,21 @@ content = document.getElementById("questionContent");
 nextButton = document.getElementById("next");
 let score = 0;
 let questionList = [];
+let allCorrect = false;
+
+function playFail() {
+  let audio = document.getElementById("audioFail");
+  audio.pause();
+  audio.currentTime = 0;
+  audio.play();
+}
+
+function playSuccess() {
+  let audio = document.getElementById("audioSuccess");
+  audio.pause();
+  audio.currentTime = 0;
+  audio.play();
+}
 
 class Question {
   constructor(statement, answers, rightAnswer) {
@@ -15,7 +30,6 @@ class Question {
   }
 
   displayAnswers() {
-    this.firstRightTry = true;
     this.nbrRightAnswers = 0;
     for (let i = 0; i < this.answers.length; i++) {
       content.innerHTML += `<p>${
@@ -25,23 +39,22 @@ class Question {
       }</button></p>`;
       document.querySelectorAll(".answer").forEach((item) => {
         item.addEventListener("click", () => {
-          if (
-            item.innerHTML == this.rightAnswer[0] ||
-            item.innerHTML == this.rightAnswer[1]
-          ) {
+          if (item.innerHTML == this.rightAnswer[0] || item.innerHTML == this.rightAnswer[1]) {
             console.log("Bravo! c'est juste!");
             item.style.backgroundColor = "#2CAE66";
+            item.setAttribute("onclick", playSuccess());
             this.nbrRightAnswers++;
-            this.firstRightTry = false;
           } else {
             console.log("Bouh! Essaye à nouveau :)");
-            this.firstRightTry = false;
             item.style.backgroundColor = "#F93822";
+            item.setAttribute("onclick", playFail());
             this.nbrRightAnswers--;
           }
-          if (score + this.nbrRightAnswers == score + this.rightAnswer.length) {
-            score++;
-            console.log(score);
+
+          if (this.nbrRightAnswers == this.rightAnswer.length) {
+            allCorrect = true;
+          } else {
+            allCorrect = false;
           }
         });
       });
@@ -102,6 +115,10 @@ function displayQuizz(questionList, index) {
   nextButton.addEventListener("click", () => {
     if (index < questionList.length - 1) {
       displayQuizz(questionList, index + 1);
+      if (allCorrect) {
+        score++;
+        allCorrect = false;
+      }
     } else {
       content.innerHTML = "Score: " + +score + "/" + questionList.length;
       nextButton.innerHTML = "Try Again!";
@@ -128,12 +145,14 @@ makeQuestion(
 makeQuestion(
   "What's the output of this code : ",
   ["2", "undefined", "x", "8"],
-  ["2"]
+  ["2"], 
+  "2"
 );
 
 makeQuestion(
   "Question 3 : What's the output of this code : ",
   ["2", "callback", "undefined", "nothing", "x", "4"],
-  ["2"]
+  ["2"], 
+  "3"
 );
 displayQuizz(questionList, 0);
